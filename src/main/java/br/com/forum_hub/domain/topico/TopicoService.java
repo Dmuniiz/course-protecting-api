@@ -25,6 +25,7 @@ public class TopicoService {
         var topico = new Topico(dados, curso);
         return repository.save(topico);
     }
+
     public Page<DadosListagemTopico> listar(String categoria, Long idCurso, Boolean semResposta, Boolean solucionados, Pageable paginacao) {
         Specification<Topico> spec = Specification.where(TopicoSpecification.estaAberto())
                 .and(TopicoSpecification.temCategoria(categoria))
