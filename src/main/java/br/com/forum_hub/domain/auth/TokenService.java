@@ -16,12 +16,12 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    @Value("{api.security.token.secret}")
+    @Value("${api.security.token.secret}")
     private String secret;
 
     public static final String ISSUER = "Forum Hub";
 
-    public String generateTokenJWT(Usuario usuario, String secret) {
+    public String generateTokenJWT(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // Use a strong, secure secret
@@ -29,8 +29,25 @@ public class TokenService {
                                     .withSubject(usuario.getUsername())
                                     .withIssuer(ISSUER)
                                     .withIssuedAt(new Date())
-                                    .withExpiresAt(dateExpires()) // 1 hour expiration
+                                    .withExpiresAt(dateExpires(30)) // 1 hour expiration
                                     .sign(algorithm);
+            return token;
+        } catch (JWTCreationException exception){
+            // Invalid Signing configuration / Couldn't convert Claims
+            throw new RegraDeNegocioException("Error creating JWT token");
+        }
+    }
+
+    public String generateRefreshToken(Usuario usuario) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            // Use a strong, secure secret
+            String token = JWT.create()
+                    .withSubject(usuario.getId().toString())
+                    .withIssuer(ISSUER)
+                    .withIssuedAt(new Date())
+                    .withExpiresAt(dateExpires(120)) // 1 hour expiration
+                    .sign(algorithm);
             return token;
         } catch (JWTCreationException exception){
             // Invalid Signing configuration / Couldn't convert Claims
@@ -52,8 +69,10 @@ public class TokenService {
         }
     }
 
-    private Instant dateExpires() {
-        return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
+    private Instant dateExpires(Integer minutes) {
+        return LocalDateTime.now()
+                .plusHours(minutes)
+                .toInstant(ZoneOffset.of("-03:00"));
     }
 
 }

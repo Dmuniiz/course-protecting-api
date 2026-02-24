@@ -4,12 +4,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @Entity
 @Table(name="usuarios")
+@Getter
 public class Usuario implements UserDetails {
 
     @Id
@@ -38,19 +40,4 @@ public class Usuario implements UserDetails {
         return email;
     }
 
-    public String getNome() {
-        return nomeCompleto;
-    }
-
-    public String getBiografia() {
-        return biografia;
-    }
-
-    public String getNomeUsuario() {
-        return nomeUsuario;
-    }
-
-    public String getMiniBiografia() {
-        return miniBiografia;
-    }
 }

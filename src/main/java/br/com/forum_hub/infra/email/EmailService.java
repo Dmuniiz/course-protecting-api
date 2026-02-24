@@ -22,6 +22,7 @@ public class EmailService {
     public EmailService(JavaMailSender enviadorEmail) {
         this.enviadorEmail = enviadorEmail;
     }
+
     @Async
     private void enviarEmail(String emailUsuario, String assunto, String conteudo) {
         MimeMessage message = enviadorEmail.createMimeMessage();
