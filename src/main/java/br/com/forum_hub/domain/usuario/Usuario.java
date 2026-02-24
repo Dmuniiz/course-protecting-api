@@ -4,7 +4,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -28,6 +30,15 @@ public class Usuario implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    public Usuario(DadosCadastroUsuario dados, String senhaCriptografada) {
+        this.nomeCompleto = dados.nomeCompleto();
+        this.email = dados.email();
+        this.senha = senhaCriptografada;
+        this.nomeUsuario = dados.nomeUsuario();
+        this.biografia = dados.biografia();
+        this.miniBiografia = dados.miniBiografia();
     }
 
     @Override

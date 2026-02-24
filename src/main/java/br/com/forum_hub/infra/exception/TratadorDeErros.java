@@ -33,6 +33,11 @@ public class TratadorDeErros {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException .class)
+    public ResponseEntity<String> tratarErro400(IllegalArgumentException  ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> tratarErro403(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());

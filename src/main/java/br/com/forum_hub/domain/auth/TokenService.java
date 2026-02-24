@@ -3,8 +3,10 @@ package br.com.forum_hub.domain.auth;
 import br.com.forum_hub.domain.usuario.Usuario;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,48 +24,42 @@ public class TokenService {
     public static final String ISSUER = "Forum Hub";
 
     public String generateTokenJWT(Usuario usuario) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            // Use a strong, secure secret
-            String token = JWT.create()
-                                    .withSubject(usuario.getUsername())
-                                    .withIssuer(ISSUER)
-                                    .withIssuedAt(new Date())
-                                    .withExpiresAt(dateExpires(30)) // 1 hour expiration
-                                    .sign(algorithm);
-            return token;
-        } catch (JWTCreationException exception){
-            // Invalid Signing configuration / Couldn't convert Claims
-            throw new RegraDeNegocioException("Error creating JWT token");
-        }
+        // Access Token: curto (ex: 30 min), usa username ou ID
+        return createToken(usuario.getUsername(), 30, "ACCESS");
     }
 
     public String generateRefreshToken(Usuario usuario) {
+        // Refresh Token: longo (ex: 120 min), usa ID
+        return createToken(usuario.getId().toString(), 120, "REFRESH");
+    }
+
+    private String createToken(String subject, int minutes, String type) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            // Use a strong, secure secret
-            String token = JWT.create()
-                    .withSubject(usuario.getId().toString())
+            return JWT.create()
                     .withIssuer(ISSUER)
-                    .withIssuedAt(new Date())
-                    .withExpiresAt(dateExpires(120)) // 1 hour expiration
+                    .withSubject(subject)
+                    .withClaim("type", type) // Diferencia o propósito do token
+                    .withIssuedAt(Instant.now())
+                    .withExpiresAt(dateExpires(minutes))
                     .sign(algorithm);
-            return token;
-        } catch (JWTCreationException exception){
-            // Invalid Signing configuration / Couldn't convert Claims
-            throw new RegraDeNegocioException("Error creating JWT token");
+        } catch (JWTCreationException exception) {
+            throw new RegraDeNegocioException("Erro ao gerar token " + type);
         }
     }
 
     public String getSubjectUser(String token){
+        DecodedJWT decodedJWT;
+
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String verifier = JWT.require(algorithm)
+            JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(ISSUER)
-                    .build()
-                    .verify(token)
-                    .getSubject();
-            return verifier;
+                    .build();
+
+            decodedJWT = verifier.verify(token);
+            return decodedJWT.getSubject();
+
         }catch (JWTCreationException ex){
             throw new JWTCreationException("Failed to verify user",ex);
         }

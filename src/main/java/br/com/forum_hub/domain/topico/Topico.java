@@ -2,6 +2,7 @@ package br.com.forum_hub.domain.topico;
 
 import br.com.forum_hub.domain.curso.Categoria;
 import br.com.forum_hub.domain.curso.Curso;
+import br.com.forum_hub.domain.usuario.Usuario;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,23 +12,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "topicos")
+@Getter
 public class Topico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String titulo;
     private String mensagem;
-    private String autor;
+
+
+    @ManyToOne
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
+
     private LocalDateTime dataCriacao;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
     private Boolean aberto;
     private Integer quantidadeRespostas;
+
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
@@ -38,48 +50,16 @@ public class Topico {
     @Deprecated
     public Topico(){}
 
-    public Topico(DadosCadastroTopico dados, Curso curso) {
+    public Topico(DadosCadastroTopico dados, Curso curso, Usuario autor) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
-        this.autor = dados.autor();
+        this.autor = autor;
         this.dataCriacao = LocalDateTime.now();
         this.status = Status.NAO_RESPONDIDO;
         this.aberto = true;
         this.quantidadeRespostas = 0;
         this.categoria = curso.getCategoria();
         this.curso = curso;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public Curso getCurso() {
-        return curso;
-    }
-
-    public Integer getQuantidadeRespostas() {
-        return quantidadeRespostas;
     }
 
     public Topico atualizarInformacoes(DadosAtualizacaoTopico dados, Curso curso) {

@@ -27,4 +27,11 @@ public class AuthController {
         return ResponseEntity.ok(userAuthentication);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenJwtDTO> updateToken(@Valid @RequestBody RefreshTokenDTO dto){
+        var updateTokenAcessLogin = authService.refreshTokenAccessLogin(dto);
+
+        return ResponseEntity.ok(updateTokenAcessLogin);
+    }
+
 }
