@@ -28,10 +28,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/auth/login", "/auth/refresh").permitAll();
-                    req.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/auth/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/register/user").permitAll()
+                    .anyRequest().authenticated()
+                )
                 .addFilterBefore(securityJwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
