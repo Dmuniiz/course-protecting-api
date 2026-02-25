@@ -1,6 +1,8 @@
 package br.com.forum_hub.infra.security;
 
 import br.com.forum_hub.domain.auth.TokenService;
+import br.com.forum_hub.domain.usuario.Usuario;
+import br.com.forum_hub.domain.usuario.UsuarioRepository;
 import br.com.forum_hub.domain.usuario.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +22,7 @@ import java.io.IOException;
 public class SecurityJwtFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,7 +31,7 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
 
         if(tokenJwt != null){
             String subject = tokenService.getSubjectUser(tokenJwt);
-            UserDetails user = usuarioService.loadUserByUsername(subject);
+            Usuario user = usuarioRepository.findByEmailIgnoreCaseAndVerificadoTrue(subject).orElseThrow();
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 

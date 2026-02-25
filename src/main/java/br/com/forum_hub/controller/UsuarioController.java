@@ -10,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -28,6 +25,14 @@ public class UsuarioController {
         var user = usuarioService.cadastrar(dados);
         var uri = uriBuilder.path("/{nomeUsuario}").buildAndExpand(user.getNomeUsuario()).toUri();
         return ResponseEntity.created(uri).body(new DadosListagemUsuario(user));
+    }
+
+    @GetMapping("/verificar-conta")
+        public ResponseEntity<String> verificarEmail(@RequestParam String code){
+        usuarioService.verificarEmail(code);
+
+        return ResponseEntity.ok("Conta verificada com sucesso");
+
     }
 
 }
