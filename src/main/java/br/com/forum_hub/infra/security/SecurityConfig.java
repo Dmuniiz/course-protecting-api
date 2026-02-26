@@ -4,6 +4,7 @@ package br.com.forum_hub.infra.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/login", "/auth/refresh").permitAll()
                         .requestMatchers("/register/user", "/register/verificar-conta", "/register/{nomeUsuario}").permitAll()
-                    .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityJwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

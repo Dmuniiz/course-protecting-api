@@ -1,5 +1,6 @@
 package br.com.forum_hub.controller;
 
+import br.com.forum_hub.domain.Perfil.DadosPerfil;
 import br.com.forum_hub.domain.usuario.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,20 @@ public class UsuarioController {
     public ResponseEntity<Void> alterarSenha(@RequestBody @Valid DadosAlterarSenhaUsuario dados, @AuthenticationPrincipal Usuario logado){
         usuarioService.alterarSenha(logado, dados);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/desativar")
+    public ResponseEntity<Void> desativarUsuario(@AuthenticationPrincipal Usuario logado){
+        usuarioService.desativarUsuario(logado);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/adicionar-perfil/{id}")
+    public ResponseEntity<DadosListagemUsuario> adicionarPerfil(@RequestBody @Valid DadosPerfil dados, @PathVariable Long id){
+        var user = usuarioService.adicionarPerfil(id, dados);
+
+        return ResponseEntity.ok(new DadosListagemUsuario(user));
+
     }
 
 

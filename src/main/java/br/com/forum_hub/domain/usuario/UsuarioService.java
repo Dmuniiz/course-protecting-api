@@ -1,5 +1,9 @@
 package br.com.forum_hub.domain.usuario;
 
+import br.com.forum_hub.domain.Perfil.DadosPerfil;
+import br.com.forum_hub.domain.Perfil.Perfil;
+import br.com.forum_hub.domain.Perfil.PerfilNome;
+import br.com.forum_hub.domain.Perfil.PerfilRepository;
 import br.com.forum_hub.infra.email.EmailService;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.validation.Valid;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
@@ -36,7 +41,9 @@ public class UsuarioService implements UserDetailsService {
                 });
 
         String encodedPassword = passwordEncoder.encode(dados.senha());
-        var user = new Usuario(dados, encodedPassword);
+
+        var perfil = perfilRepository.findByNome(PerfilNome.ESTUDANTE);
+        var user = new Usuario(dados, encodedPassword, perfil);
 
         emailService.enviarEmailVerificado(user);
         return usuarioRepository.save(user);
@@ -74,7 +81,18 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void desativarUsuario(Usuario usuario){
+    public void desativarUsuario(Usuario usuario) {
         usuario.desativar();
     }
+
+    @Transactional
+    public Usuario adicionarPerfil(Long id, @Valid DadosPerfil dados) {
+        var user = usuarioRepository.findById(id).orElseThrow();
+        Perfil perfil = perfilRepository.findByNome(dados.perfilNome());
+        user.adicionarPerfil(perfil);
+
+        return user;
+    }
+
+
 }
