@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,8 @@ public class Usuario implements UserDetails {
     private String token;
     private LocalDateTime expiracaoToken;
 
+     private boolean ativo;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -63,6 +66,12 @@ public class Usuario implements UserDetails {
         return email;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return ativo;
+    }
+
+
     public void verificar() {
 
         if(expiracaoToken.isBefore(LocalDateTime.now())){
@@ -73,5 +82,26 @@ public class Usuario implements UserDetails {
         this.token = null;
         this.expiracaoToken = null;
 
+    }
+
+    public Usuario alterarDados(DadosEdicaoUsuario dados) {
+        if(dados.nomeUsuario() != null){
+            this.nomeUsuario = dados.nomeUsuario();
+        }
+        if(dados.miniBiografia() != null){
+            this.miniBiografia = dados.miniBiografia();
+        }
+        if(dados.biografia() != null){
+            this.biografia = dados.biografia();
+        }
+        return this;
+    }
+
+    public void alterarSenha(String encodedPassword) {
+        this.senha = encodedPassword;
+    }
+
+    public void desativar() {
+        this.ativo = false;
     }
 }

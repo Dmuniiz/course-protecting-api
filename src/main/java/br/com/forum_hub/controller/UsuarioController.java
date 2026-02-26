@@ -1,11 +1,6 @@
 package br.com.forum_hub.controller;
 
-import br.com.forum_hub.domain.topico.DadosCadastroTopico;
-import br.com.forum_hub.domain.topico.DadosListagemTopico;
-import br.com.forum_hub.domain.usuario.DadosCadastroUsuario;
-import br.com.forum_hub.domain.usuario.DadosListagemUsuario;
-import br.com.forum_hub.domain.usuario.Usuario;
-import br.com.forum_hub.domain.usuario.UsuarioService;
+import br.com.forum_hub.domain.usuario.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +29,26 @@ public class UsuarioController {
         return ResponseEntity.ok("Conta verificada com sucesso");
 
     }
+
+    @GetMapping("/{nomeUsuario}")
+    public ResponseEntity<DadosListagemUsuario> exibirPerfil(@PathVariable String nomeUsuario){
+        var user = usuarioService.buscarUsuarioPeloNome(nomeUsuario);
+        return ResponseEntity.ok(new DadosListagemUsuario(user));
+
+    }
+
+    @PutMapping("/editar-perfil")
+    public ResponseEntity<DadosListagemUsuario> editarPerfil(@AuthenticationPrincipal Usuario logado, @RequestBody @Valid DadosEdicaoUsuario dados){
+        var usuario = usuarioService.editarPerfil(logado, dados);
+        return ResponseEntity.ok(new DadosListagemUsuario(usuario));
+    }
+
+    @PatchMapping("/alterar-senha")
+    public ResponseEntity<Void> alterarSenha(@RequestBody @Valid DadosAlterarSenhaUsuario dados, @AuthenticationPrincipal Usuario logado){
+        usuarioService.alterarSenha(logado, dados);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

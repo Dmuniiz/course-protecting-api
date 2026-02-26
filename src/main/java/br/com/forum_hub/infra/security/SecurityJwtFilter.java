@@ -34,7 +34,6 @@ public class SecurityJwtFilter extends OncePerRequestFilter {
             Usuario user = usuarioRepository.findByEmailIgnoreCaseAndVerificadoTrue(subject).orElseThrow();
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

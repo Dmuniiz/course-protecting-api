@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth/login", "/auth/refresh").permitAll()
-                        .requestMatchers("/register/user", "/register/verificar-conta").permitAll()
+                        .requestMatchers("/register/user", "/register/verificar-conta", "/register/{nomeUsuario}").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityJwtFilter, UsernamePasswordAuthenticationFilter.class)
