@@ -1,13 +1,11 @@
 package br.com.forum_hub.domain.usuario;
 
-import br.com.forum_hub.domain.Perfil.DadosPerfil;
-import br.com.forum_hub.domain.Perfil.Perfil;
-import br.com.forum_hub.domain.Perfil.PerfilNome;
-import br.com.forum_hub.domain.Perfil.PerfilRepository;
+import br.com.forum_hub.domain.perfil.*;
 import br.com.forum_hub.infra.email.EmailService;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +22,7 @@ public class UsuarioService implements UserDetailsService {
     private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final HierarquiaService hierarquiaService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -81,7 +79,12 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void desativarUsuario(Usuario usuario) {
+    public void desativarUsuario(Long id, Usuario logado) {
+        var usuario = usuarioRepository.findById(id).orElseThrow();
+
+        if(hierarquiaService.usuarioNaoTemPermissoes(logado, usuario, "ROLE_ADMIN"))
+            throw new AccessDeniedException("Não é possivel realizar essa operação!");
+
         usuario.desativar();
     }
 
@@ -95,4 +98,8 @@ public class UsuarioService implements UserDetailsService {
     }
 
 
+    public void reativarUsuario(Long id) {
+        var usuario = usuarioRepository.findById(id).orElseThrow();
+        usuario.reativar();
+    }
 }

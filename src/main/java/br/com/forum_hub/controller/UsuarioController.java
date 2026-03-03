@@ -1,6 +1,6 @@
 package br.com.forum_hub.controller;
 
-import br.com.forum_hub.domain.Perfil.DadosPerfil;
+import br.com.forum_hub.domain.perfil.DadosPerfil;
 import br.com.forum_hub.domain.usuario.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,9 +50,15 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/reativar-conta/{id}")
+    public ResponseEntity<Void> reativarUsuario(@PathVariable Long id){
+        usuarioService.reativarUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/desativar")
-    public ResponseEntity<Void> desativarUsuario(@AuthenticationPrincipal Usuario logado){
-        usuarioService.desativarUsuario(logado);
+    public ResponseEntity<Void> desativarUsuario(@PathVariable Long id, @AuthenticationPrincipal Usuario logado){
+        usuarioService.desativarUsuario(id, logado);
         return ResponseEntity.noContent().build();
     }
 

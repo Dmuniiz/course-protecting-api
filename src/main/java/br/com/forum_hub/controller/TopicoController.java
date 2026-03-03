@@ -8,6 +8,7 @@ import br.com.forum_hub.domain.topico.DadosListagemTopico;
 import br.com.forum_hub.domain.topico.TopicoService;
 import br.com.forum_hub.domain.usuario.Usuario;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,14 +28,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("topicos")
+@RequiredArgsConstructor
 public class TopicoController {
+
     private final TopicoService service;
     private final RespostaService respostaService;
 
-    public TopicoController(TopicoService service, RespostaService respostaService) {
-        this.service = service;
-        this.respostaService = respostaService;
-    }
 
     @PostMapping
     public ResponseEntity<DadosListagemTopico> cadastrar(@RequestBody @Valid DadosCadastroTopico dados, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal Usuario autor){
@@ -64,20 +63,14 @@ public class TopicoController {
     }
 
     @PutMapping
-    public ResponseEntity<DadosListagemTopico> atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados){
-        var topico = service.atualizar(dados);
+    public ResponseEntity<DadosListagemTopico> atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados, @AuthenticationPrincipal Usuario logado){
+        var topico = service.atualizar(dados, logado);
         return ResponseEntity.ok(new DadosListagemTopico(topico));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> fechar(@PathVariable Long id){
-        service.fechar(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id){
-        service.excluir(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id, @AuthenticationPrincipal Usuario logado){
+        service.excluir(id, logado);
         return ResponseEntity.noContent().build();
     }
 

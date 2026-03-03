@@ -1,6 +1,5 @@
 package br.com.forum_hub.domain.usuario;
-import br.com.forum_hub.domain.Perfil.Perfil;
-import br.com.forum_hub.domain.Perfil.PerfilNome;
+import br.com.forum_hub.domain.perfil.Perfil;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -110,10 +109,15 @@ public class Usuario implements UserDetails {
     }
 
     public void desativar() {
+
         this.ativo = false;
     }
 
     public void adicionarPerfil(Perfil perfil) {
         this.perfis.add(perfil);
+    }
+
+    public void reativar() {
+        this.ativo = true;
     }
 }

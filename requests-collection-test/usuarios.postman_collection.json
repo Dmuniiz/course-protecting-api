@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "d8385b14-2ffb-4841-9ab0-d7ba02ed9de1",
+		"name": "usuarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18045374"
+	},
+	"item": [
+		{
+			"name": "cadastro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"iasminalura@gmail.com\",\r\n    \"senha\":\"12345678\",\r\n    \"nomeCompleto\": \"Iasmin Araújo\",\r\n    \"nomeUsuario\": \"iasminaraujoc\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/registrar",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"registrar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "detalhes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/maria",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"maria"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edição de dados",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nomeUsuario\": \"maria2\",\r\n    \"miniBiografia\":\"Estudante de programação\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/editar-perfil",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"editar-perfil"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "alterar senha",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"senhaAtual\":\"maria123\",\r\n    \"novaSenha\":\"12345678\",\r\n    \"novaSenhaConfirmacao\":\"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/alterar-senha",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"alterar-senha"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "desativar conta",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/desativar",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"desativar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adicionar perfil",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJGb3J1bSBIdWIiLCJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJleHAiOjE3MzAxMjcyMzZ9.mljDj3ZbFbeGjJyG6gRTZ571IRDBE4aTArgTaLzl584",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"perfilNome\":\"ADMIN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/adicionar-perfil/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"adicionar-perfil",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remover perfil",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJGb3J1bSBIdWIiLCJzdWIiOiJtYXJpYUBlbWFpbC5jb20iLCJleHAiOjE3MzAxMjcyMzZ9.mljDj3ZbFbeGjJyG6gRTZ571IRDBE4aTArgTaLzl584",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"perfilNome\":\"ADMIN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/adicionar-perfil/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"adicionar-perfil",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

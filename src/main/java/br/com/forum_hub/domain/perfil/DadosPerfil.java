@@ -1,4 +1,4 @@
-package br.com.forum_hub.domain.Perfil;
+package br.com.forum_hub.domain.perfil;
 
 import jakarta.validation.constraints.NotNull;
 
