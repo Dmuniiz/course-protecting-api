@@ -35,7 +35,7 @@ public class Resposta {
         this.mensagem = dados.mensagem();
         this.autor = dados.autor();
         this.dataCriacao = LocalDateTime.now();
-        this.solucao = false;
+        this.solucao = Boolean.FALSE;
         this.topico = topico;
     }
 
@@ -69,7 +69,7 @@ public class Resposta {
     }
 
     public Resposta marcarComoSolucao() {
-        this.solucao = true;
+        this.solucao = Boolean.TRUE;
         return this;
     }
 }

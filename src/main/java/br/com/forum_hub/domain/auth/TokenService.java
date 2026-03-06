@@ -25,15 +25,15 @@ public class TokenService {
 
     public String generateTokenJWT(Usuario usuario) {
         // Access Token: curto (ex: 30 min), usa username ou ID
-        return createToken(usuario.getUsername(), 30, "ACCESS");
+        return createToken(usuario.getUsername(), (Integer)30, "ACCESS");
     }
 
     public String generateRefreshToken(Usuario usuario) {
         // Refresh Token: longo (ex: 120 min), usa ID
-        return createToken(usuario.getId().toString(), 120, "REFRESH");
+        return createToken(usuario.getId().toString(), (Integer) 120, "REFRESH");
     }
 
-    private String createToken(String subject, int minutes, String type) {
+    private String createToken(String subject, Integer minutes, String type) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()

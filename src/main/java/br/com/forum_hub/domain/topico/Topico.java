@@ -56,8 +56,8 @@ public class Topico {
         this.autor = autor;
         this.dataCriacao = LocalDateTime.now();
         this.status = Status.NAO_RESPONDIDO;
-        this.aberto = true;
-        this.quantidadeRespostas = 0;
+        this.aberto = Boolean.TRUE;
+        this.quantidadeRespostas = getQuantidadeRespostas();
         this.categoria = curso.getCategoria();
         this.curso = curso;
     }
@@ -79,8 +79,8 @@ public class Topico {
         this.status = status;
     }
 
-    public void incrementarRespostas() {
-        this.quantidadeRespostas++;
+    public Integer incrementarRespostas() {
+        return this.quantidadeRespostas++;
     }
 
     public void decrementarRespostas() {
@@ -88,7 +88,7 @@ public class Topico {
     }
 
     public void fechar() {
-        this.aberto = false;
+        this.aberto = Boolean.FALSE;
     }
 
     public boolean estaAberto() {

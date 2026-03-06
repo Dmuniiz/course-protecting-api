@@ -34,7 +34,6 @@ public class TopicoController {
     private final TopicoService service;
     private final RespostaService respostaService;
 
-
     @PostMapping
     public ResponseEntity<DadosListagemTopico> cadastrar(@RequestBody @Valid DadosCadastroTopico dados, UriComponentsBuilder uriBuilder, @AuthenticationPrincipal Usuario autor){
         var topico = service.cadastrar(dados, autor);

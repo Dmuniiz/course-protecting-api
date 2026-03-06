@@ -22,6 +22,10 @@ public class TopicoService {
 
     @Transactional
     public Topico cadastrar(DadosCadastroTopico dados, Usuario autor) {
+
+        if (autor == null) {
+            throw new IllegalArgumentException("Autor não pode ser nulo");
+        }
         var curso = cursoService.buscarPeloId(dados.cursoId());
         var topico = new Topico(dados, curso, autor);
         return repository.save(topico);

@@ -2,6 +2,7 @@ package br.com.forum_hub.domain.usuario;
 import br.com.forum_hub.domain.perfil.Perfil;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +56,7 @@ public class Usuario implements UserDetails {
         this.nomeUsuario = dados.nomeUsuario();
         this.biografia = dados.biografia();
         this.miniBiografia = dados.miniBiografia();
-        this.verificado = false;
+        this.verificado = Boolean.FALSE;
         this.token = UUID.randomUUID().toString();
         this.expiracaoToken = LocalDateTime.now().plusMinutes(30);
         this.ativo = false;
@@ -84,7 +85,7 @@ public class Usuario implements UserDetails {
             throw new RegraDeNegocioException("Link de verificação expirou");
         }
 
-        this.verificado = true;
+        this.verificado = Boolean.TRUE;
         this.token = null;
         this.ativo = true;
         this.expiracaoToken = null;

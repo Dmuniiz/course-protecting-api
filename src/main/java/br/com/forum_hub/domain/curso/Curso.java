@@ -18,6 +18,7 @@ public class Curso {
 
     @Column(unique = true)
     private String nome;
+
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
