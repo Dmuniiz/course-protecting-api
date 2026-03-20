@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,9 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ConfiguracoesSeguranca {
 
     private final FiltroTokenAcesso filtroTokenAcesso;
+    private final OAuth2SuccessHandler successHandler;
 
-    public ConfiguracoesSeguranca(FiltroTokenAcesso filtroTokenAcesso) {
+    public ConfiguracoesSeguranca(FiltroTokenAcesso filtroTokenAcesso, OAuth2SuccessHandler successHandler) {
         this.filtroTokenAcesso = filtroTokenAcesso;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -30,7 +33,7 @@ public class ConfiguracoesSeguranca {
         return http
                 .authorizeHttpRequests(
                         req -> {
-                            req.requestMatchers("/login", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
+                            req.requestMatchers("/login/**", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
 
                             req.requestMatchers(HttpMethod.GET, "/cursos").permitAll();
                             req.requestMatchers(HttpMethod.GET, "/topicos/**").permitAll();
@@ -43,12 +46,13 @@ public class ConfiguracoesSeguranca {
 
                             req.requestMatchers(HttpMethod.PATCH, "/topicos/**").hasRole("MODERADOR");
 
-                            req.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/**").hasRole("ADMIN");
+                            req.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/**").hasAnyRole("ADMIN");
                             req.requestMatchers(HttpMethod.PATCH, "/reativar-conta/**").hasRole("ADMIN");
 
                             req.anyRequest().authenticated();
                         }
                 )
+                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(filtroTokenAcesso, UsernamePasswordAuthenticationFilter.class)

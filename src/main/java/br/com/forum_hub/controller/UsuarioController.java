@@ -30,6 +30,12 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    @PostMapping("/registrar")
+    public ResponseEntity<DadosListagemUsuario> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder){
+        var usuario = usuarioService.cadastrar(dados);
+        var uri = uriBuilder.path("/{nomeUsuario}").buildAndExpand(usuario.getNomeUsuario()).toUri();
+        return ResponseEntity.created(uri).body(new DadosListagemUsuario(usuario));
+    }
 
     @GetMapping("/verificar-conta")
     public ResponseEntity<String> verificarEmail(@RequestParam String codigo){
